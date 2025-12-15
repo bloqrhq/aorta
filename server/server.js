@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./src/config/connectDB.js";
+import authRoutes from "./src/routes/auth.js";
 
 // loading environment veriables
 dotenv.config();
@@ -16,6 +17,9 @@ app.use(express.json());
 
 //connect to mongoDB
 connectDB();
+
+// Routes
+app.use("/api", authRoutes);
 
 // Base backend test
 app.get("/", (_, res) => {
