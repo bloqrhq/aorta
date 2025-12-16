@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 const features = [
     {
         title: "AI NCERT Engine",
@@ -37,11 +39,39 @@ const features = [
     }
 ];
 
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.2
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.5,
+            ease: "easeOut" as const
+        }
+    }
+};
+
 export default function Features() {
     return (
         <section id="features" className="py-20 bg-white dark:bg-slate-dark transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-3xl mx-auto mb-16">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center max-w-3xl mx-auto mb-16"
+                >
                     <h2 className="text-primary dark:text-primary/90 font-bold tracking-wide uppercase text-sm mb-2">Why Choose Aorta</h2>
                     <h3 className="text-3xl md:text-4xl font-bold text-slate-dark dark:text-white">
                         Smarter Prep, <span className="text-primary dark:text-primary/90">Better Outcomes</span>
@@ -49,11 +79,21 @@ export default function Features() {
                     <p className="mt-4 text-xl text-slate-medium dark:text-slate-300">
                         Medical education today is broken. We fix it by making learning adaptive, interactive, and outcome-driven.
                     </p>
-                </div>
+                </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
+                    className="grid grid-cols-1 md:grid-cols-3 gap-8"
+                >
                     {features.map((feature, index) => (
-                        <div key={index} className={`group p-8 rounded-3xl border ${feature.borderColor} bg-clinical dark:bg-slate-800 dark:border-slate-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
+                        <motion.div
+                            key={index}
+                            variants={itemVariants}
+                            className={`group p-8 rounded-3xl border ${feature.borderColor} bg-clinical dark:bg-slate-800 dark:border-slate-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
+                        >
                             <div className={`w-14 h-14 rounded-2xl ${feature.color} flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform`}>
                                 {feature.icon}
                             </div>
@@ -61,9 +101,9 @@ export default function Features() {
                             <p className="text-slate-medium dark:text-slate-300 leading-relaxed">
                                 {feature.description}
                             </p>
-                        </div>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </div>
         </section>
     );
