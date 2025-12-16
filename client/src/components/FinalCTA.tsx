@@ -35,8 +35,6 @@ export default function FinalCTA() {
                         <span className="relative z-10">Begin with Aorta</span>
                         <div className="absolute inset-0 bg-primary/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                     </motion.button>
-
-                    <p className="mt-6 text-slate-500 text-sm">No credit card required for trial.</p>
                 </motion.div>
             </div>
         </section>
