@@ -1,91 +1,100 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 
-import axios from 'axios';
-import type { AxiosError } from 'axios';
+import {
+  loginUser,
+  registerUser,
+  logoutUser,
+  getMe,
+} from "../api/auth.api";
 
+   //Types
 
-// 1. Types
 export interface User {
   id: string;
   name: string;
   email: string;
 }
 
-export interface AuthContextType {
+interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  loading: boolean;
+  error: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  loading: boolean;
-  error: string | null;
 }
 
-// 2. API Constants (Configurable Placeholders)
-const LOGIN_URL = 'http://localhost:5000/api/auth/login';
-const REGISTER_URL = 'http://localhost:5000/api/auth/register';
-const LOGOUT_URL = '/api/auth/logout';
-const ME_URL = '/api/auth/me';
+//   Context
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// 3. AuthProvider Component
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+   //Provider
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const checkAuth = async () => {
-    try {
-      const response = await axios.get(ME_URL);
-      setUser(response.data);
-      setIsAuthenticated(true);
-    } catch (err) {
-      const axiosError = err as AxiosError;
-      if (axiosError.response) {
-        if (axiosError.response.status === 401 || axiosError.response.status === 403) {
-          setUser(null);
-          setIsAuthenticated(false);
-        } else if (axiosError.response.status === 404) {
-          // Ignore 404 as per instructions (optional endpoint)
-        }
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Optional session check (professional behavior)
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await getMe();
+        setUser(res.data);
+        setIsAuthenticated(true);
+      } catch {
+        // Either not logged in OR endpoint not available
+        setUser(null);
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     checkAuth();
   }, []);
 
   const login = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
+
     try {
-      const response = await axios.post(LOGIN_URL, { email, password });
-      setUser(response.data);
+      const res = await loginUser({
+        email: email.trim(),
+        password,
+      });
+
+      setUser(res.data);
       setIsAuthenticated(true);
-    } catch (err) {
-      const axiosError = err as AxiosError<{ message: string }>;
-      setError(axiosError.response?.data?.message || 'Login failed');
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Login failed");
       throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string
+  ) => {
     setLoading(true);
     setError(null);
+
     try {
-      await axios.post(REGISTER_URL, { name, email, password });
-      // Do NOT set user/isAuthenticated here to avoid auto-login
-    } catch (err) {
-      const axiosError = err as AxiosError<{ message: string }>;
-      setError(axiosError.response?.data?.message || 'Registration failed');
+      await registerUser({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+      });
+
+      // IMPORTANT: no auto-login here
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Registration failed");
       throw err;
     } finally {
       setLoading(false);
@@ -94,10 +103,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = async () => {
     setLoading(true);
+
     try {
-      await axios.post(LOGOUT_URL);
-    } catch (err) {
-      // Ignore errors
+      await logoutUser();
+    } catch {
+      // ignore
     } finally {
       setUser(null);
       setIsAuthenticated(false);
@@ -106,17 +116,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout, loading, error }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        loading,
+        error,
+        login,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// 4. useAuth Hook
+   //Hook
+
+
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  return context;
+  return ctx;
 };
