@@ -80,13 +80,15 @@ export default function ProblemSolution() {
                                         <span className="bg-recovery/20 text-recovery text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Clinical Scenario</span>
                                         <span className="text-gold text-sm">★ Top 1% Difficulty</span>
                                     </div>
-                                    <p className="font-semibold text-white mb-4">A 45-year-old patient presents with...</p>
+                                    <p className="font-semibold text-white mb-4">In a pedigree, if a rare disorder appears in every generation and affects both sexes equally, it's likely:</p>
                                     <div className="space-y-2">
+                                        <div className="p-3 border border-slate-700 bg-slate-700/30 rounded-lg text-sm text-slate-400">X-linked recessive</div>
                                         <div className="p-3 border border-recovery/30 bg-recovery/10 rounded-lg text-sm text-white flex justify-between items-center">
-                                            <span>Correct Diagnosis Path</span>
+                                            <span>Autosomal dominant</span>
                                             <span className="text-recovery font-bold bg-recovery/20 rounded-full w-5 h-5 flex items-center justify-center">✓</span>
                                         </div>
-                                        <div className="p-3 border border-slate-700 bg-slate-700/30 rounded-lg text-sm text-slate-400">Incorrect Option A</div>
+                                        <div className="p-3 border border-slate-700 bg-slate-700/30 rounded-lg text-sm text-slate-400">Autosomal recessive</div>
+                                        <div className="p-3 border border-slate-700 bg-slate-700/30 rounded-lg text-sm text-slate-400">Y-linked</div>
                                     </div>
                                 </div>
                             </motion.div>
