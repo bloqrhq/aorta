@@ -10,7 +10,8 @@ export default function SignIn() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || '/dashboard';
+  // Intent-aware redirect: Default to /practice if no specific intent exists
+  const from = location.state?.from?.pathname || '/practice';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

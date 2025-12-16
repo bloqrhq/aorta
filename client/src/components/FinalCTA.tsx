@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export default function FinalCTA() {
     return (
@@ -27,14 +28,16 @@ export default function FinalCTA() {
                         Don't leave it to chance. Start it with the intelligence you deserve.
                     </p>
 
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-recovery text-white px-10 py-5 rounded-full text-xl font-bold shadow-2xl hover:bg-recovery/90 transition-all group relative overflow-hidden cursor-pointer"
-                    >
-                        <span className="relative z-10">Begin with Aorta</span>
-                        <div className="absolute inset-0 bg-primary/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                    </motion.button>
+                    <Link to="/register">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="bg-recovery text-white px-10 py-5 rounded-full text-xl font-bold shadow-2xl hover:bg-recovery/90 transition-all group relative overflow-hidden cursor-pointer"
+                        >
+                            <span className="relative z-10">Begin with Aorta</span>
+                            <div className="absolute inset-0 bg-primary/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        </motion.button>
+                    </Link>
                 </motion.div>
             </div>
         </section>
