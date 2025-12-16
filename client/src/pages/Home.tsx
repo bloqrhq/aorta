@@ -1,13 +1,17 @@
-import HeroSection from "../components/HeroSection";
-import NavBar from "../components/NavBar";
+import Layout from "../components/Layout";
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import Features from "../components/Features";
+import Footer from "../components/Footer";
+
 function Home() {
     return (
-        <>
-            <section className="HomePage">
-                <NavBar />
-                <HeroSection />
-            </section>
-        </>
+        <Layout>
+            <Navbar />
+            <Hero />
+            <Features />
+            <Footer />
+        </Layout>
     );
 }
 

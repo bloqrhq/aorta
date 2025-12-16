@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #5B2D8B;
+  --color-clinical: #FAF7F5;
+  --color-neural: #1E3A8A;
+  --color-recovery: #2E7D32;
+  --color-arterial: #C62828;
+  --color-gold: #F4C430;
+  --color-slate-dark: #1F2933;
+  --color-slate-medium: #6B7280;
+  --color-divider: #E5E7EB;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+/* Force dark mode to respect the class found on HTML element */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light dark;
+}
