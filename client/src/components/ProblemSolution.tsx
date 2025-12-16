@@ -56,10 +56,12 @@ export default function ProblemSolution() {
                                     Students spend 80% of time memorizing textbooks passively. When exams come, applied questions feel "out of syllabus".
                                 </p>
                                 <div className="p-6 bg-slate-800/50 rounded-xl border border-slate-700 w-full max-w-md mx-auto relative opacity-80 backdrop-blur-sm">
-                                    <div className="h-4 bg-slate-700 rounded w-3/4 mb-4" />
-                                    <div className="h-4 bg-slate-700 rounded w-full mb-2" />
-                                    <div className="h-4 bg-slate-700 rounded w-5/6 mb-2" />
-                                    <div className="h-4 bg-slate-700 rounded w-full mb-2" />
+
+                                    <p className="text-slate-500">The presence of a chromogenic substrate gives blue
+                                        coloured colonies if the plasmid in the bacteria does not have an
+                                        insert. Presence of insert results into insertional inactivation of the
+                                        β-galactosidase gene and the colonies do not produce any colour,
+                                        these are identified as recombinant colonies.</p>
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <span className="bg-slate-900/90 text-red-200 border border-red-500/30 px-4 py-2 rounded-lg font-bold transform -rotate-12 backdrop-blur-md">PASSIVE LEARNING</span>
                                     </div>

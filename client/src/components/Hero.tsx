@@ -103,9 +103,9 @@ export default function Hero() {
                             <motion.button
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="bg-primary text-white border border-white/10 px-8 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(91,45,139,0.5)] relative overflow-hidden group"
+                                className="bg-primary text-white border border-white/10 px-8 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(91,45,139,0.5)] relative overflow-hidden group cursor-pointer"
                             >
-                                <span className="relative z-10">Start Free NEET Trial</span>
+                                <span className="relative z-10 ">Begin with Aorta</span>
                                 <div className="absolute inset-0 bg-white/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 {/* Gold Pulse Micro-interaction */}
                                 <motion.div
@@ -116,7 +116,7 @@ export default function Hero() {
                                 />
                             </motion.button>
 
-                            <a href="#vision" className="flex items-center gap-2 px-8 py-4 text-white/90 hover:text-white font-semibold transition-colors group">
+                            <a href="#roadmap" className="flex items-center gap-2 px-8 py-4 text-white/90 hover:text-white font-semibold transition-colors group">
                                 Explore Aorta's Vision
                                 <span className="group-hover:translate-x-1 transition-transform">→</span>
                             </a>

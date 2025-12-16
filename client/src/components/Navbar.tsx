@@ -38,8 +38,8 @@ export default function Navbar() {
                             )}
                         </button>
 
-                        <button className="bg-primary text-white px-5 py-2 rounded-full font-semibold hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg">
-                            Get Started
+                        <button className="bg-primary text-white px-5 py-2 rounded-full font-semibold hover:bg-opacity-90 transition-all shadow-md hover:shadow-[0_0_20px_rgba(91,45,139,0.5)] cursor-pointer">
+                            Sign in
                         </button>
                     </div>
 

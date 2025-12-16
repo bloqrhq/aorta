@@ -61,7 +61,7 @@ export default function Roadmap() {
     const x = useTransform(scrollYProgress, [0, 1], ["0px", `-${scrollRange}px`]);
 
     return (
-        <section ref={targetRef} className="relative h-[300vh] bg-clinical dark:bg-slate-dark transition-colors duration-300">
+        <section ref={targetRef} id="roadmap" className="relative h-[300vh] bg-clinical dark:bg-slate-dark transition-colors duration-300">
             <div className="sticky top-0 flex h-screen items-center overflow-hidden">
                 <motion.div
                     ref={scrollRef}
