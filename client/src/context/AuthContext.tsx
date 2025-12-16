@@ -5,7 +5,7 @@ import {
   loginUser,
   registerUser,
   logoutUser,
-  getMe,
+  // getMe,
 } from "../api/auth.api";
 
    //Types
@@ -40,21 +40,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Optional session check (professional behavior)
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await getMe();
-        setUser(res.data);
-        setIsAuthenticated(true);
-      } catch {
-        // Either not logged in OR endpoint not available
-        setUser(null);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // const checkAuth = async () => {
+    //   try {
+    //     const res = await getMe();
+    //     setUser(res.data);
+    //     setIsAuthenticated(true);
+    //   } catch {
+    //     // Either not logged in OR endpoint not available
+    //     setUser(null);
+    //     setIsAuthenticated(false);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
 
-    checkAuth();
+    // checkAuth();
+    setLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
