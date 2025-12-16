@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./src/config/connectDB.js";
 import questionRoutes from "./src/routes/QuestionRoute.js";
+import authRoutes from "./src/routes/AuthRoute.js";
 
 // loading environment veriables
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(express.json());
 connectDB();
 
 app.use("/api/questions", questionRoutes);
+app.use("/api/auth", authRoutes);
 
 // Base backend test
 app.get("/", (_, res) => {
