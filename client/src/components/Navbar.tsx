@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Logo from '../assets/aorta_logo.png';
+import Logo from '../assets/logo.png';
 import { useTheme } from '../context/ThemeContext';
 
 export default function Navbar() {

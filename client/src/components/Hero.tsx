@@ -8,85 +8,144 @@ export default function Hero() {
         offset: ["start start", "end start"],
     });
 
-    const yText = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-    const yVisual = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+    const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+    const yMidground = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+    const yForeground = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
 
     return (
         <section
             ref={ref}
-            className="relative overflow-hidden pt-16 pb-20 lg:pt-24 lg:pb-28"
+            className="relative min-h-[90vh] overflow-hidden flex items-center justify-center bg-gradient-to-br from-primary via-[#4a2475] to-neural/30 text-white"
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            {/* Background Layer: Grid & Gradient Mesh */}
+            <motion.div style={{ y: yBackground }} className="absolute inset-0 z-0">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+                <div className="absolute top-0 right-0 p-20 w-[500px] h-[500px] bg-primary/40 rounded-full blur-[100px] mix-blend-screen animate-pulse" />
+                <div className="absolute bottom-0 left-0 p-20 w-[400px] h-[400px] bg-neural/40 rounded-full blur-[80px] mix-blend-screen" />
+            </motion.div>
 
+            {/* Midground Layer: Floating Medical Symbols (Abstract) */}
+            <motion.div style={{ y: yMidground }} className="absolute inset-0 z-10 pointer-events-none">
                 <motion.div
-                    style={{ y: yText, opacity }}
-                    className="mx-auto max-w-4xl"
-                >
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
+                    animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-1/4 right-[10%] w-16 h-16 border-2 border-neural/30 rounded-lg transform rotate-12 backdrop-blur-sm"
+                />
+                <motion.div
+                    animate={{ y: [0, 30, 0], rotate: [0, -10, 0] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                    className="absolute bottom-1/3 left-[15%] w-24 h-24 border border-white/10 rounded-full bg-white/5 backdrop-blur-md"
+                />
+                {/* ECG Line Hint */}
+                <svg className="absolute top-1/2 left-0 w-full h-32 opacity-10 stroke-white fill-none" viewBox="0 0 1000 100" preserveAspectRatio="none">
+                    <path d="M0,50 L200,50 L220,10 L240,90 L260,50 L1000,50" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+                </svg>
+            </motion.div>
+
+            {/* Foreground Layer: Content & "3D Aspirant" Placeholder */}
+            <motion.div style={{ y: yForeground }} className="container mx-auto px-4 z-20 relative grid md:grid-cols-2 gap-12 items-center">
+
+                {/* Copy */}
+                <div className="text-left">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-dark dark:text-white mb-6"
                     >
-                        Master Medicine with <span className="text-primary dark:text-primary/90">Adaptive Intelligence</span>
-                    </motion.h1>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                        className="mt-4 text-xl md:text-2xl text-slate-medium dark:text-slate-300 max-w-2xl mx-auto mb-10"
-                    >
-                        Transforms how students prepare for medical careers—starting with NEET UG and scaling to lifelong clinical training.
-                    </motion.p>
+                        <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-gold font-medium text-sm mb-6 backdrop-blur-md">
+                            AI-Powered Medical Mastery
+                        </span>
+                        <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight mb-6 text-white drop-shadow-sm">
+                            From NEET Preparation to <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">Clinical Thinking</span>
+                            <div className="text-lg font-normal opacity-70 mt-2 block">Powered by AI</div>
+                        </h1>
+                        <p className="text-xl text-blue-100/90 leading-relaxed mb-10 max-w-xl">
+                            Master NCERT concepts. Eliminate weak zones. Train your medical mind from day one.
+                        </p>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-                        className="flex flex-col sm:flex-row justify-center gap-4 mb-16"
-                    >
-                        <button className="bg-primary text-white text-lg px-8 py-4 rounded-full font-bold hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                            Start Learning Now
-                        </button>
-                        <button className="bg-white dark:bg-slate-800 text-primary dark:text-primary-300 border border-primary dark:border-primary/50 text-lg px-8 py-4 rounded-full font-bold hover:bg-clinical dark:hover:bg-slate-700 transition-all shadow-sm">
-                            Watch Demo
-                        </button>
+                        <div className="flex flex-wrap gap-4">
+                            <motion.button
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="bg-primary text-white border border-white/10 px-8 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(91,45,139,0.5)] relative overflow-hidden group"
+                            >
+                                <span className="relative z-10">Start Free NEET Trial</span>
+                                <div className="absolute inset-0 bg-white/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                {/* Gold Pulse Micro-interaction */}
+                                <motion.div
+                                    animate={{ opacity: [0, 0.5, 0], scale: [1, 1.1, 1] }}
+                                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 6 }}
+                                    className="absolute inset-0 border-2 border-gold rounded-full"
+                                />
+                            </motion.button>
+
+                            <a href="#vision" className="flex items-center gap-2 px-8 py-4 text-white/90 hover:text-white font-semibold transition-colors group">
+                                Explore Aorta's Vision
+                                <span className="group-hover:translate-x-1 transition-transform">→</span>
+                            </a>
+                        </div>
                     </motion.div>
-                </motion.div>
+                </div>
 
-                {/* Hero Visual/Stats placeholder */}
-                <motion.div
-                    style={{ y: yVisual }}
-                    className="relative mx-auto max-w-5xl mt-8"
-                >
-                    <div className="bg-gradient-to-tr from-primary/10 to-neural/10 dark:from-primary/20 dark:to-neural/20 rounded-3xl p-8 border border-divider dark:border-slate-medium/20 shadow-2xl backdrop-blur-sm">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Visual: Simulated 3D Aspirant */}
+                <div className="relative hidden md:block h-[600px] w-full">
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1, delay: 0.2 }}
+                        className="absolute inset-0 flex items-center justify-center"
+                    >
+                        {/* Placeholder for 3D Aspirant - simplified as a glowing card hierarchy */}
+                        <div className="relative w-80 h-[500px] bg-slate-900/40 rounded-[2rem] border border-white/10 backdrop-blur-xl shadow-2xl p-6 transform rotate-y-12 rotate-3 hover:rotate-0 transition-all duration-700">
+                            {/* Internal UI Mockup */}
+                            <div className="w-full h-40 bg-gradient-to-br from-neural/20 to-primary/20 rounded-xl mb-4 border border-white/5 relative overflow-hidden">
+                                <div className="absolute bottom-4 left-4">
+                                    <div className="text-white/50 text-xs uppercase tracking-wider">NEET Predicted Rank</div>
+                                    <div className="text-3xl font-bold text-white">Top 1%</div>
+                                </div>
+                                <div className="absolute top-4 right-4 text-gold animate-pulse">
+                                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                {[1, 2, 3].map((i) => (
+                                    <div key={i} className="h-12 bg-white/5 rounded-lg w-full animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
+                                ))}
+                            </div>
+
+                            {/* Floating elements */}
                             <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-divider dark:border-slate-medium/20"
+                                animate={{ y: [0, -10, 0] }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                className="absolute -right top-100 bg-white text-primary px-4 py-3 rounded-xl shadow-xl font-bold flex items-center gap-2"
                             >
-                                <div className="text-4xl font-bold text-neural dark:text-blue-400 mb-2">10k+</div>
-                                <div className="text-slate-medium dark:text-slate-300 font-medium">Active Students</div>
+                                <span className="text-recovery">✓</span> Accuracy +15%
                             </motion.div>
                             <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-divider dark:border-slate-medium/20"
+                                animate={{ y: [0, 10, 0] }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                                className="absolute -left top-50 bg-neural text-white px-18 py-3 rounded-xl shadow-xl font-bold text-sm border border-white/20"
                             >
-                                <div className="text-4xl font-bold text-recovery dark:text-green-400 mb-2">94%</div>
-                                <div className="text-slate-medium dark:text-slate-300 font-medium">Exam Success Rate</div>
+                                Biology: Mastered
                             </motion.div>
                             <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-divider dark:border-slate-medium/20"
+                                animate={{ y: [0, 10, 0] }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                                className="absolute -left top-64 bg-neural text-white px-18 py-3 rounded-xl shadow-xl font-bold text-sm border border-white/20"
                             >
-                                <div className="text-4xl font-bold text-arterial dark:text-red-400 mb-2">24/7</div>
-                                <div className="text-slate-medium dark:text-slate-300 font-medium">AI Tutor Access</div>
+                                Physics: Mastered
+                            </motion.div>
+                            <motion.div
+                                animate={{ y: [0, 10, 0] }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                                className="absolute -left top-78 bg-neural text-white px-16 py-3 rounded-xl shadow-xl font-bold text-sm border border-white/20"
+                            >
+                                Chemistry: Mastered
                             </motion.div>
                         </div>
-                    </div>
-                </motion.div>
-            </div>
+                    </motion.div>
+                </div>
+            </motion.div>
         </section>
     );
 }

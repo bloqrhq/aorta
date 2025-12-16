@@ -20,3 +20,19 @@
 :root {
   color-scheme: light dark;
 }
+
+@layer base {
+  body {
+    @apply bg-clinical text-slate-dark antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply tracking-tight;
+  }
+}

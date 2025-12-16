@@ -1,12 +1,13 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import React from "react";
 
 const features = [
     {
         title: "AI NCERT Engine",
-        description: "Converts textbook lines into smart MCQs that adapt to student weaknesses.",
+        description: "Every NCERT line transformed into adaptive NEET-level MCQs.",
         icon: (
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
             </svg>
         ),
         color: "bg-neural",
@@ -14,28 +15,28 @@ const features = [
         borderColor: "border-neural/20"
     },
     {
-        title: "Exam Simulator",
-        description: "Recreates NEET's trick patterns with real-time percentile rankings.",
+        title: "Clinical Reasoning Builder",
+        description: "Train how doctors think — not just how students memorize. (Coming Soon)",
         icon: (
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
             </svg>
         ),
-        color: "bg-recovery",
-        textColor: "text-recovery",
-        borderColor: "border-recovery/20"
+        color: "bg-primary",
+        textColor: "text-primary",
+        borderColor: "border-primary/20"
     },
     {
-        title: "Weakness Analytics",
-        description: "Heatmaps pinpoint exactly where students lose marks.",
+        title: "Exam Simulator Intelligence",
+        description: "Experience NEET traps, timing pressure, and real-time ranking.",
         icon: (
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
         ),
-        color: "bg-arterial",
-        textColor: "text-arterial",
-        borderColor: "border-arterial/20"
+        color: "bg-gold",
+        textColor: "text-gold",
+        borderColor: "border-gold/20"
     }
 ];
 
@@ -56,28 +57,97 @@ const itemVariants = {
         y: 0,
         transition: {
             duration: 0.5,
-            ease: "easeOut" as const
+            ease: "easeOut"
         }
     }
 };
 
+function FeatureCard({ feature }: { feature: any }) {
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const mouseX = useSpring(x);
+    const mouseY = useSpring(y);
+
+    const rotateX = useTransform(mouseY, [-0.5, 0.5], ["10deg", "-10deg"]);
+    const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+    function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+        const rect = event.currentTarget.getBoundingClientRect();
+
+        const width = rect.width;
+        const height = rect.height;
+
+        const mouseXVal = event.clientX - rect.left;
+        const mouseYVal = event.clientY - rect.top;
+
+        const xPct = mouseXVal / width - 0.5;
+        const yPct = mouseYVal / height - 0.5;
+
+        x.set(xPct);
+        y.set(yPct);
+    }
+
+    function handleMouseLeave() {
+        x.set(0);
+        y.set(0);
+    }
+
+    return (
+        <motion.div
+            variants={itemVariants}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d"
+            }}
+            className={`relative p-8 rounded-3xl border border-white/20 bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-shadow duration-300`}
+        >
+            <div
+                style={{ transform: "translateZ(20px)" }}
+                className={`w-14 h-14 rounded-2xl ${feature.color} flex items-center justify-center mb-6 shadow-md`}
+            >
+                {feature.icon}
+            </div>
+            <h4
+                style={{ transform: "translateZ(30px)" }}
+                className={`text-xl font-bold ${feature.textColor} dark:text-white mb-3`}
+            >
+                {feature.title}
+            </h4>
+            <p
+                style={{ transform: "translateZ(20px)" }}
+                className="text-slate-medium dark:text-slate-300 leading-relaxed font-medium"
+            >
+                {feature.description}
+            </p>
+        </motion.div>
+    )
+}
+
 export default function Features() {
     return (
-        <section id="features" className="py-20 bg-white dark:bg-slate-dark transition-colors duration-300">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="features" className="py-24 bg-white dark:bg-slate-dark transition-colors duration-300 relative overflow-hidden">
+            {/* Background blobs */}
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-neural/5 rounded-full blur-[100px] pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center max-w-3xl mx-auto mb-16"
+                    transition={{ duration: 0.8 }}
+                    className="text-center max-w-3xl mx-auto mb-20"
                 >
-                    <h2 className="text-primary dark:text-primary/90 font-bold tracking-wide uppercase text-sm mb-2">Why Choose Aorta</h2>
-                    <h3 className="text-3xl md:text-4xl font-bold text-slate-dark dark:text-white">
-                        Smarter Prep, <span className="text-primary dark:text-primary/90">Better Outcomes</span>
+                    <h2 className="text-primary dark:text-primary/90 font-bold tracking-wide uppercase text-sm mb-3">The Aorta Advantage</h2>
+                    <h3 className="text-3xl md:text-5xl font-bold text-slate-dark dark:text-white leading-tight">
+                        Train <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-neural">Like A Doctor</span>
                     </h3>
-                    <p className="mt-4 text-xl text-slate-medium dark:text-slate-300">
-                        Medical education today is broken. We fix it by making learning adaptive, interactive, and outcome-driven.
+                    <p className="mt-6 text-xl text-slate-medium dark:text-slate-300 font-light">
+                        Go beyond rote memorization. Build the clinical reflexes needed for top rank and future practice.
                     </p>
                 </motion.div>
 
@@ -89,19 +159,7 @@ export default function Features() {
                     className="grid grid-cols-1 md:grid-cols-3 gap-8"
                 >
                     {features.map((feature, index) => (
-                        <motion.div
-                            key={index}
-                            variants={itemVariants}
-                            className={`group p-8 rounded-3xl border ${feature.borderColor} bg-clinical dark:bg-slate-800 dark:border-slate-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
-                        >
-                            <div className={`w-14 h-14 rounded-2xl ${feature.color} flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform`}>
-                                {feature.icon}
-                            </div>
-                            <h4 className={`text-xl font-bold ${feature.textColor} dark:text-white mb-3`}>{feature.title}</h4>
-                            <p className="text-slate-medium dark:text-slate-300 leading-relaxed">
-                                {feature.description}
-                            </p>
-                        </motion.div>
+                        <FeatureCard key={index} feature={feature} />
                     ))}
                 </motion.div>
             </div>
