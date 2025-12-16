@@ -12,7 +12,8 @@ const connectDB = async () => {
     await mongoose.connect(URL, {});
     console.log("MongoDB Connected Successfully......");
   } catch (err) {
-    console.log(err);
+    console.error("MongoDB Connection Error:", err.message);
+    console.error("Make sure MongoDB is installed and running locally, or use MongoDB Atlas");
   }
 };
 

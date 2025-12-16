@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,26 +16,29 @@ const Login = () => {
     setLoading(true);
     setError('');
 
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        setError('Login successful! Welcome ' + data.user.username);
-      } else {
-        setError(data.message || 'Login failed');
-      }
-    } catch (err) {
-      setError('Network error');
-    } finally {
+    // Client-side only login
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    
+    // Find user
+    const user = users.find((u: any) => u.email === formData.email);
+    if (!user) {
+      setError('Invalid credentials');
       setLoading(false);
+      return;
     }
+
+    // Check password
+    if (user.password !== formData.password) {
+      setError('Invalid credentials');
+      setLoading(false);
+      return;
+    }
+
+    // Login successful
+    localStorage.setItem('currentUser', JSON.stringify({ id: user.id, username: user.username, email: user.email }));
+    localStorage.setItem('token', `token_${user.id}`);
+    setLoading(false);
+    navigate('/dashboard');
   };
 
   return (

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,26 +16,38 @@ const Register = () => {
     setLoading(true);
     setError('');
 
-    try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        setError('Registration successful! Welcome ' + data.user.username);
-      } else {
-        setError(data.message || 'Registration failed');
-      }
-    } catch (err) {
-      setError('Network error');
-    } finally {
+    // Client-side only registration
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    
+    // Check if user already exists
+    const existingUser = users.find((u: any) => u.email === formData.email);
+    if (existingUser) {
+      setError('User already exists');
       setLoading(false);
+      return;
     }
+
+    // Validate password
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
+      setLoading(false);
+      return;
+    }
+
+    // Save new user
+    const newUser = {
+      id: Date.now(),
+      username: formData.username,
+      email: formData.email,
+      password: formData.password
+    };
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('currentUser', JSON.stringify({ id: newUser.id, username: newUser.username, email: newUser.email }));
+    localStorage.setItem('token', `token_${newUser.id}`);
+    
+    setLoading(false);
+    navigate('/dashboard');
   };
 
   return (
