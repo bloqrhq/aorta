@@ -19,8 +19,8 @@ export default function Navbar() {
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-8">
                         <a href="#features" className="text-slate-medium dark:text-slate-200 hover:text-primary dark:hover:text-primary transition-colors font-medium">Features</a>
-                        <a href="#how-it-works" className="text-slate-medium dark:text-slate-200 hover:text-primary dark:hover:text-primary transition-colors font-medium">How it works</a>
-                        <a href="#pricing" className="text-slate-medium dark:text-slate-200 hover:text-primary dark:hover:text-primary transition-colors font-medium">Pricing</a>
+                        <a href="#how-it-works" className="text-slate-medium dark:text-slate-200 hover:text-primary dark:hover:text-primary transition-colors font-medium">Practice</a>
+                        <a href="#pricing" className="text-slate-medium dark:text-slate-200 hover:text-primary dark:hover:text-primary transition-colors font-medium">Contest</a>
 
                         <button
                             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
