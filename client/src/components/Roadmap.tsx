@@ -1,76 +1,101 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 
 const roadmapItems = [
     {
-        year: "2024",
+        year: "2026",
         title: "NEET UG Mastery",
         description: "Adaptive NCERT modules, Exam Simulators, and Weakness Analytics live.",
         status: "Live Now",
         color: "bg-recovery",
-        accent: "border-recovery"
+        textColor: "text-recovery",
+        borderColor: "border-recovery"
     },
     {
-        year: "2025",
+        year: "2027",
         title: "MBBS Clinical Reasoning",
         description: "Case-based learning for 1st Year Anatomy & Physiology. Bridging the gap between theory and practice.",
         status: "Beta Access",
         color: "bg-neural",
-        accent: "border-neural"
+        textColor: "text-neural",
+        borderColor: "border-neural"
     },
     {
-        year: "2026",
+        year: "2028",
         title: "Global Residency Training",
         description: "USMLE & PLAB prep modules integrated with virtual patient simulations.",
         status: "Vision",
         color: "bg-gold",
-        accent: "border-gold"
+        textColor: "text-gold",
+        borderColor: "border-gold"
     }
 ];
 
 export default function Roadmap() {
     const targetRef = useRef<HTMLDivElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [scrollRange, setScrollRange] = useState(0);
+
     const { scrollYProgress } = useScroll({
         target: targetRef,
     });
 
-    const x = useTransform(scrollYProgress, [0, 1], ["1%", "-65%"]);
+    useEffect(() => {
+        const updateScrollRange = () => {
+            if (scrollRef.current && targetRef.current) {
+                // Calculate total scrollable width minus the viewport width
+                // Adding some padding/buffer to ensure smooth end
+                const fullWidth = scrollRef.current.scrollWidth;
+                const viewWidth = window.innerWidth;
+                // If content fits, no scrolling needed (0). Otherwise diff.
+                const range = fullWidth > viewWidth ? fullWidth - viewWidth + 64 : 0;
+                setScrollRange(range);
+            }
+        };
+
+        updateScrollRange();
+        window.addEventListener("resize", updateScrollRange);
+        return () => window.removeEventListener("resize", updateScrollRange);
+    }, []);
+
+    const x = useTransform(scrollYProgress, [0, 1], ["0px", `-${scrollRange}px`]);
 
     return (
-        <section ref={targetRef} className="relative h-[300vh] bg-slate-dark">
+        <section ref={targetRef} className="relative h-[300vh] bg-clinical dark:bg-slate-dark transition-colors duration-300">
             <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-                <motion.div style={{ x }} className="flex gap-16 px-16 items-center">
+                <motion.div
+                    ref={scrollRef}
+                    style={{ x }}
+                    className="flex gap-12 px-8 md:px-16 items-center"
+                >
 
-                    <div className="min-w-[400px]">
-                        <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Your Career <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-white">Roadmap</span></h2>
-                        <p className="text-slate-400 text-xl max-w-sm">From your first MCQ to your postgraduate specialization, Aorta grows with you.</p>
+                    <div className="min-w-[300px] md:min-w-[400px]">
+                        <h2 className="text-4xl md:text-6xl font-bold text-slate-dark dark:text-white mb-6">Your Career <br /><span className="text-primary dark:text-primary/90">Roadmap</span></h2>
+                        <p className="text-slate-medium dark:text-slate-300 text-lg md:text-xl max-w-sm">From your first MCQ to your postgraduate specialization, Aorta grows with you.</p>
                     </div>
 
                     {roadmapItems.map((item, index) => (
-                        <div key={index} className="relative min-w-[500px] h-[400px] bg-slate-800/50 backdrop-blur-md rounded-3xl border border-white/10 p-12 flex flex-col justify-between group hover:border-white/30 transition-colors">
-                            <div className={`absolute top-0 left-0 w-full h-2 ${item.color} rounded-t-3xl`} />
+                        <div key={index} className="relative min-w-[400px] md:min-w-[500px] h-[400px] bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl p-10 flex flex-col justify-between group hover:-translate-y-2 transition-transform duration-300">
+                            <div className={`absolute top-0 left-0 w-full h-3 ${item.color} rounded-t-3xl`} />
 
                             <div>
                                 <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white mb-6 ${item.color}`}>
                                     {item.status}
                                 </div>
-                                <h3 className="text-6xl font-bold text-white/10 mb-2 select-none">{item.year}</h3>
-                                <h4 className="text-3xl font-bold text-white mb-4">{item.title}</h4>
-                                <p className="text-slate-300 text-lg leading-relaxed">{item.description}</p>
+                                <h3 className={`text-6xl font-bold opacity-30 dark:opacity-40 mb-2 select-none ${item.textColor}`}>{item.year}</h3>
+                                <h4 className="text-3xl font-bold text-slate-dark dark:text-white mb-4">{item.title}</h4>
+                                <p className="text-slate-medium dark:text-slate-300 text-lg leading-relaxed">{item.description}</p>
                             </div>
 
-                            <div className="flex items-center gap-4 text-white/50 group-hover:text-white transition-colors">
-                                <span className="text-sm font-bold uppercase tracking-widest">Learn More</span>
+                            <div className={`flex items-center gap-3 font-bold text-sm uppercase tracking-widest ${item.textColor} opacity-80 group-hover:opacity-100 transition-opacity`}>
+                                <span>Learn More</span>
                                 <span>→</span>
                             </div>
                         </div>
                     ))}
 
-                    <div className="min-w-[300px] flex items-center justify-center">
-                        <button className="bg-white text-slate-dark px-8 py-4 rounded-full font-bold hover:bg-clinical transition-colors">
-                            Join the Waitlist
-                        </button>
-                    </div>
+                    {/* Added buffer div to ensure right padding is visible at end of scroll */}
+                    <div className="min-w-[50px]" />
 
                 </motion.div>
             </div>
