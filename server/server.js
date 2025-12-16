@@ -6,7 +6,7 @@ import questionRoutes from "./src/routes/QuestionRoute.js";
 import authRoutes from "./src/routes/AuthRoute.js";
 
 // loading environment veriables
-dotenv.config();
+dotenv.config({ path: ".env.example" });
 
 // port from env
 const PORT = process.env.PORT || 5000;
