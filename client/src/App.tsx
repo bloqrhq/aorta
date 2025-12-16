@@ -1,5 +1,9 @@
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
 export default function App() {
   return (<>
-  <h1 className="underline text-red-500">Welcome to Aorta!</h1>
+    <Routes>
+      <Route path="/" element={<Home />} />
+    </Routes>
   </>);
 }
