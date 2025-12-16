@@ -1,7 +1,7 @@
-import Chemistry from "../models/Chemistry.js";
-import Physics from "../models/Physics.js";
-import Botany from "../models/Botany.js";
-import Zoology from "../models/Zoology.js";
+import Chemistry from "../model/Chemistry.js";
+import Physics from "../model/Physics.js";
+import Botany from "../model/Botany.js";
+import Zoology from "../model/Zoology.js";
 
 // Mapping subjects to their respective models
 const subjectModelMap = {

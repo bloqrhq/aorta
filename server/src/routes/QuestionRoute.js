@@ -4,7 +4,7 @@ import {
   getAllQuestions,
   getByYear,
 } from "../controllers/QuestionControllers.js";
-import { validateQuestion } from "../middleware/validateQuestion.js";
+import { validateQuestion } from "../middleware/ValidateQuestion.js";
 
 const router = express.Router();
 
