@@ -3,58 +3,69 @@ import Physics from "../model/Physics.js";
 import Botany from "../model/Botany.js";
 import Zoology from "../model/Zoology.js";
 
-// Mapping subjects to their respective models
-const subjectModelMap = {
-  che: Chemistry,
-  phy: Physics,
-  bot: Botany,
-  zoo: Zoology,
+const subjectMap = {
+  che: { model: Chemistry, field: "chemistry" },
+  phy: { model: Physics, field: "physics" },
+  bot: { model: Botany, field: "botany" },
+  zoo: { model: Zoology, field: "zoology" },
 };
+
 
 export const addQuestion = async (req, res) => {
   try {
     const { subject } = req.params;
-    const Model = subjectModelMap[subject]; // Get the corresponding subject model
+    const config = subjectMap[subject];
 
-    if (!Model) return res.status(400).json({ message: "Invalid subject" });
+    if (!config)
+      return res.status(400).json({ message: "Invalid subject" });
 
-    let doc = await Model.findOne(); // check model existence
-    if (!doc) doc = await Model.create({});
+    const { model: Model, field } = config;
 
-    const key = Object.keys(doc.toObject())[0]; // Get the field name (e.g., 'chemistry', 'physics', etc.)
-    doc[key].push(req.body);
+    let doc = await Model.findOne();
+    if (!doc) doc = await Model.create({ [field]: [] });
+
+    doc[field].push(req.body);
 
     await doc.save();
-    res.status(201).json({ message: "Question added successfully" });
+
+    res.status(201).json({
+      message: "Question added successfully",
+      total: doc[field].length,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 export const getAllQuestions = async (req, res) => {
   try {
     const { subject } = req.params;
-    const Model = subjectModelMap[subject];
+    const config = subjectMap[subject];
 
-    if (!Model) return res.status(400).json({ message: "Invalid subject" });
+    if (!config)
+      return res.status(400).json({ message: "Invalid subject" });
 
-    const data = await Model.findOne();
-    res.json(data || {});
+    const data = await config.model.findOne();
+    res.json(data ? data[config.field] : []);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+
 export const getByYear = async (req, res) => {
   try {
     const { subject, year } = req.params;
-    const Model = subjectModelMap[subject];
+    const config = subjectMap[subject];
 
-    const data = await Model.findOne();
-    if (!data) return res.json([]);
+    if (!config)
+      return res.status(400).json({ message: "Invalid subject" });
 
-    const key = Object.keys(data.toObject())[0];
-    const filtered = data[key].filter((q) => q.year === year);
+    const doc = await config.model.findOne();
+    if (!doc) return res.json([]);
+
+    const filtered = doc[config.field].filter((q) => q.year === year);
 
     res.json(filtered);
   } catch (err) {
