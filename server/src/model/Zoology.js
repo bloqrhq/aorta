@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { QuestionSchema } from "./QuestionModel.js";
 
-const BotanySchema = new mongoose.Schema(
+const ZoologySchema = new mongoose.Schema(
   {
-    botany: {
+    zoology: {
       type: [QuestionSchema],
       default: [],
     },
@@ -11,4 +11,4 @@ const BotanySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Botany", BotanySchema);
+export default mongoose.model("Zoology", ZoologySchema);
