@@ -2,16 +2,24 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Question } from './QuestionList'; // Import shared interface
 
+interface UserStats {
+    solved: number;
+    attempts: number;
+    streak: number;
+}
+
 interface QuestionPlayerProps {
     question: Question;
     subject: string;
+    stats?: UserStats; // Optional for backward/layout compatibility if needed, but should be passed
     onBack: () => void;
     onNext: () => void;
     onSolve: () => void;
+    onUpdateStats: (isCorrect: boolean) => void;
     isLast: boolean;
 }
 
-export default function QuestionPlayer({ question, subject, onBack, onNext, onSolve, isLast }: QuestionPlayerProps) {
+export default function QuestionPlayer({ question, subject, stats, onBack, onNext, onSolve, onUpdateStats, isLast }: QuestionPlayerProps) {
     const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -45,7 +53,7 @@ export default function QuestionPlayer({ question, subject, onBack, onNext, onSo
             setIsSubmitted(true);
 
             // Update Stats & Solved Status
-            updateStats(true);
+            onUpdateStats(true);
             onSolve(); // Mark as solved in parent
         } else {
             // Incorrect
@@ -62,21 +70,13 @@ export default function QuestionPlayer({ question, subject, onBack, onNext, onSo
                 // Second attempt wrong -> Fail
                 setIsCorrect(false);
                 setIsSubmitted(true);
-                updateStats(false);
+                onUpdateStats(false);
             }
         }
     };
 
-    const updateStats = (isSuccess: boolean) => {
-        const stats = JSON.parse(localStorage.getItem('user_stats') || '{"solved": 0, "attempts": 0}');
-        stats.attempts += 1;
-        if (isSuccess) stats.solved += 1;
-        localStorage.setItem('user_stats', JSON.stringify(stats));
-    };
-
-    const acceptanceRate = () => {
-        const stats = JSON.parse(localStorage.getItem('user_stats') || '{"solved": 0, "attempts": 0}');
-        if (stats.attempts === 0) return 100;
+    const getAccuracy = () => {
+        if (!stats || stats.attempts === 0) return 0;
         return Math.round((stats.solved / stats.attempts) * 100);
     };
 
@@ -97,8 +97,8 @@ export default function QuestionPlayer({ question, subject, onBack, onNext, onSo
                 </button>
                 <div className="flex flex-col items-end">
                     <span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Your Accuracy</span>
-                    <span className={`text-base font-bold ${acceptanceRate() >= 70 ? 'text-recovery' : acceptanceRate() >= 40 ? 'text-warning' : 'text-arterial'}`}>
-                        {acceptanceRate()}%
+                    <span className={`text-base font-bold ${getAccuracy() >= 70 ? 'text-recovery dark:text-green-400' : getAccuracy() >= 40 ? 'text-warning dark:text-white' : 'text-arterial dark:text-red-400'}`}>
+                        {getAccuracy()}%
                     </span>
                 </div>
             </div>

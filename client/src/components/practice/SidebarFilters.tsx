@@ -30,10 +30,10 @@ export default function SidebarFilters({ subject, setSubject }: SidebarFiltersPr
     const [selectedMode, setSelectedMode] = useState('weakness');
 
     const subjects = [
-        { id: 'phy', name: 'Physics', icon: '⚡' },
-        { id: 'che', name: 'Chemistry', icon: '🧪' },
-        { id: 'bot', name: 'Botany', icon: '🌿' },
-        { id: 'zoo', name: 'Zoology', icon: '🦁' },
+        { id: 'phy', name: 'Physics' },
+        { id: 'che', name: 'Chemistry' },
+        { id: 'bot', name: 'Botany' },
+        { id: 'zoo', name: 'Zoology' },
     ];
 
     return (
@@ -54,7 +54,6 @@ export default function SidebarFilters({ subject, setSubject }: SidebarFiltersPr
                                 }
                             `}
                         >
-                            <span className="text-lg">{s.icon}</span>
                             <span className="text-sm">{s.name}</span>
                         </button>
                     ))}
@@ -71,7 +70,7 @@ export default function SidebarFilters({ subject, setSubject }: SidebarFiltersPr
                         description="AI-curated questions from your lowest accuracy topics."
                         active={selectedMode === 'weakness'}
                         onClick={() => setSelectedMode('weakness')}
-                        icon="🎯"
+                        
                     />
                     <ModeCard
                         id="neet"
@@ -79,7 +78,6 @@ export default function SidebarFilters({ subject, setSubject }: SidebarFiltersPr
                         description="Mock test simulation with standard weightage."
                         active={selectedMode === 'neet'}
                         onClick={() => setSelectedMode('neet')}
-                        icon="📝"
                     />
                     <ModeCard
                         id="timed"
@@ -87,7 +85,6 @@ export default function SidebarFilters({ subject, setSubject }: SidebarFiltersPr
                         description="Speed & accuracy focus. 30 questions in 30 mins."
                         active={selectedMode === 'timed'}
                         onClick={() => setSelectedMode('timed')}
-                        icon="⏱️"
                     />
                 </div>
             </section>

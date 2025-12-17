@@ -9,6 +9,12 @@ import api from '../api/axios';
 // Simple in-memory cache
 const questionCache: Record<string, Question[]> = {};
 
+export interface UserStats {
+  solved: number;
+  attempts: number;
+  streak: number;
+}
+
 export default function Practice() {
   const [currentView, setCurrentView] = useState<'list' | 'player'>('list');
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
@@ -22,16 +28,28 @@ export default function Practice() {
   // Solved Questions Tracking
   const [solvedIds, setSolvedIds] = useState<Set<string>>(new Set());
 
-  // Load solved status on mount
+  // User Stats
+  const [userStats, setUserStats] = useState<UserStats>({ solved: 0, attempts: 0, streak: 0 });
+
+  // Load data on mount
   useEffect(() => {
-    const saved = localStorage.getItem('solved_questions');
-    if (saved) {
-      setSolvedIds(new Set(JSON.parse(saved)));
+    const savedSolved = localStorage.getItem('solved_questions');
+    if (savedSolved) {
+      setSolvedIds(new Set(JSON.parse(savedSolved)));
+    }
+
+    const savedStats = localStorage.getItem('user_stats');
+    if (savedStats) {
+      setUserStats(JSON.parse(savedStats));
     }
   }, []);
 
   // Fetch Questions
   useEffect(() => {
+    // Reset view when subject changes
+    setCurrentView('list');
+    setSelectedQuestion(null);
+
     const fetchQuestions = async () => {
       // Check cache
       if (questionCache[subject]) {
@@ -79,6 +97,18 @@ export default function Practice() {
     });
   };
 
+  const handleUpdateStats = (isCorrect: boolean) => {
+    setUserStats(prev => {
+      const newStats = {
+        solved: prev.solved + (isCorrect ? 1 : 0),
+        attempts: prev.attempts + 1,
+        streak: isCorrect ? prev.streak + 1 : 0
+      };
+      localStorage.setItem('user_stats', JSON.stringify(newStats));
+      return newStats;
+    });
+  };
+
   const handleNextQuestion = () => {
     if (!selectedQuestion) return;
 
@@ -100,7 +130,7 @@ export default function Practice() {
   return (
     <PracticeLayout
       sidebar={<SidebarFilters subject={subject} setSubject={setSubject} />}
-      utilityPanel={<UtilityPanel />}
+      utilityPanel={<UtilityPanel stats={userStats} />}
     >
       {currentView === 'list' ? (
         <QuestionList
@@ -116,9 +146,11 @@ export default function Practice() {
           <QuestionPlayer
             question={selectedQuestion}
             subject={subject}
+            stats={userStats}
             onBack={handleBackToList}
             onNext={handleNextQuestion}
             onSolve={() => handleSolve(selectedQuestion._id)}
+            onUpdateStats={handleUpdateStats}
             isLast={isLastQuestion}
           />
         )
