@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password,
       });
 
-      setUser(res.data);
+      setUser(res.data.data);
       setIsAuthenticated(true);
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed");
