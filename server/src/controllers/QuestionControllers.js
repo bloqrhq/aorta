@@ -10,14 +10,12 @@ const subjectMap = {
   zoo: { model: Zoology, field: "zoology" },
 };
 
-
 export const addQuestion = async (req, res) => {
   try {
     const { subject } = req.params;
     const config = subjectMap[subject];
 
-    if (!config)
-      return res.status(400).json({ message: "Invalid subject" });
+    if (!config) return res.status(400).json({ message: "Invalid subject" });
 
     const { model: Model, field } = config;
 
@@ -37,14 +35,12 @@ export const addQuestion = async (req, res) => {
   }
 };
 
-
 export const getAllQuestions = async (req, res) => {
   try {
     const { subject } = req.params;
     const config = subjectMap[subject];
 
-    if (!config)
-      return res.status(400).json({ message: "Invalid subject" });
+    if (!config) return res.status(400).json({ message: "Invalid subject" });
 
     const data = await config.model.findOne();
     res.json(data ? data[config.field] : []);
@@ -53,14 +49,12 @@ export const getAllQuestions = async (req, res) => {
   }
 };
 
-
 export const getByYear = async (req, res) => {
   try {
     const { subject, year } = req.params;
     const config = subjectMap[subject];
 
-    if (!config)
-      return res.status(400).json({ message: "Invalid subject" });
+    if (!config) return res.status(400).json({ message: "Invalid subject" });
 
     const doc = await config.model.findOne();
     if (!doc) return res.json([]);
@@ -68,6 +62,47 @@ export const getByYear = async (req, res) => {
     const filtered = doc[config.field].filter((q) => q.year === year);
 
     res.json(filtered);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const addManyQuestions = async (req, res) => {
+  try {
+    const { subject } = req.params;
+    const config = subjectMap[subject];
+
+    if (!config) return res.status(400).json({ message: "Invalid subject" });
+
+    const { model: Model, field } = config;
+
+    // Support multiple input formats:
+    // 1. { "questions": [...] }
+    // 2. { "botany": [...] }, { "physics": [...] }, etc.
+    // 3. Direct array: [...]
+    let questions =
+      req.body.questions ||
+      req.body[field] ||
+      (Array.isArray(req.body) ? req.body : null);
+
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({
+        message: "Questions array is required and must not be empty",
+        hint: `Send as { "questions": [...] } or { "${field}": [...] } or direct array [...]`,
+      });
+    }
+
+    let doc = await Model.findOne();
+    if (!doc) doc = await Model.create({ [field]: [] });
+
+    doc[field].push(...questions);
+
+    await doc.save();
+
+    res.status(201).json({
+      message: `${questions.length} questions added successfully`,
+      total: doc[field].length,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

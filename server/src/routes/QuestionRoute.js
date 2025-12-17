@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addQuestion,
+  addManyQuestions,
   getAllQuestions,
   getByYear,
 } from "../controllers/QuestionControllers.js";
@@ -8,8 +9,11 @@ import { validateQuestion } from "../middleware/ValidateQuestion.js";
 
 const router = express.Router();
 
-// Add question
+// Add single question
 router.post("/:subject", validateQuestion, addQuestion);
+
+// Add multiple questions (bulk insert)
+router.post("/:subject/bulk", addManyQuestions);
 
 // Get all questions
 router.get("/:subject", getAllQuestions);
