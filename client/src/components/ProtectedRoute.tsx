@@ -4,6 +4,11 @@ import { useAuth } from '../context/AuthContext';
 const ProtectedRoute = () => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
+  // const token = localStorage.getItem("token");
+
+  // if (!token) {
+  //   return <Navigate to="/signin" state={{ from: location }} replace />;
+  // }
 
   if (loading) {
     return (
