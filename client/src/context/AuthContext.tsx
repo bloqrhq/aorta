@@ -5,7 +5,7 @@ import {
   loginUser,
   registerUser,
   logoutUser,
-  // getMe,
+  getStoredUser,
 } from "../api/auth.api";
 
    //Types
@@ -40,21 +40,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Optional session check (professional behavior)
   useEffect(() => {
-    // const checkAuth = async () => {
-    //   try {
-    //     const res = await getMe();
-    //     setUser(res.data);
-    //     setIsAuthenticated(true);
-    //   } catch {
-    //     // Either not logged in OR endpoint not available
-    //     setUser(null);
-    //     setIsAuthenticated(false);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-
-    // checkAuth();
+    // Initialize auth state from localStorage (token + user)
+    const storedUser = getStoredUser();
+    if (storedUser) {
+      setUser(storedUser);
+      setIsAuthenticated(true);
+    } else {
+      setUser(null);
+      setIsAuthenticated(false);
+    }
     setLoading(false);
   }, []);
 
@@ -63,12 +57,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
 
     try {
-      const res = await loginUser({
+      const data = await loginUser({
         email: email.trim(),
         password,
       });
 
-      setUser(res.data);
+      // data is { _id, name, email, token }
+      setUser({ id: data._id, name: data.name, email: data.email });
       setIsAuthenticated(true);
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed");
