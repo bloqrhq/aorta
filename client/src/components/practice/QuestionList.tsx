@@ -1,32 +1,50 @@
-import { useState, useEffect } from 'react';
-import api from '../../api/axios';
+import { /* useState, useEffect */ } from 'react';
+/* import api from '../../api/axios'; */
 
-interface Question {
+export interface Question {
     _id: string;
     question: string;
     options: string[];
-    correct: string;
+    correct_answer: number;
     year?: string;
+    category?: string;
 }
 
 interface QuestionListProps {
     subject: string;
+    questions: Question[];
+    loading: boolean;
+    error: string;
+    solvedIds: Set<string>;
     onSelectQuestion: (question: Question) => void;
 }
 
-export default function QuestionList({ subject, onSelectQuestion }: QuestionListProps) {
-    const [questions, setQuestions] = useState<Question[]>([]);
+// Simple in-memory cache
+/* const questionCache: Record<string, Question[]> = {}; */
+
+export default function QuestionList({ subject, questions, loading, error, solvedIds, onSelectQuestion }: QuestionListProps) {
+    /* const [questions, setQuestions] = useState<Question[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchQuestions = async () => {
+            // Check cache first
+            if (questionCache[subject]) {
+                setQuestions(questionCache[subject]);
+                return;
+            }
+
             setLoading(true);
             setError('');
             try {
                 // This matches the backend route: GET /api/questions/:subject
                 const res = await api.get(`/api/questions/${subject}`);
-                setQuestions(res.data || []);
+                const data = res.data || [];
+
+                // Update cache and state
+                questionCache[subject] = data;
+                setQuestions(data);
             } catch (err) {
                 console.error(err);
                 setError('Failed to load questions.');
@@ -38,7 +56,7 @@ export default function QuestionList({ subject, onSelectQuestion }: QuestionList
         if (subject) {
             fetchQuestions();
         }
-    }, [subject]);
+    }, [subject]); */
 
     if (loading) {
         return (
@@ -86,31 +104,40 @@ export default function QuestionList({ subject, onSelectQuestion }: QuestionList
 
             {/* List Body */}
             <div className="flex-1 overflow-y-auto custom-scrollbar">
-                {questions.map((q, i) => (
-                    <div
-                        key={q._id}
-                        onClick={() => onSelectQuestion(q)}
-                        className={`
-                            grid grid-cols-12 gap-4 px-6 py-4 border-b border-divider/50 dark:border-slate-medium/10 cursor-pointer transition-colors
-                            hover:bg-gray-50 dark:hover:bg-slate-800/50
-                            ${i % 2 === 0 ? 'bg-white dark:bg-slate-dark' : 'bg-clinical/20 dark:bg-slate-dark'}
-                        `}
-                    >
-                        <div className="col-span-1 flex justify-center items-center font-mono text-slate-400">
-                            {i + 1}
-                        </div>
+                {questions.map((q, i) => {
+                    const isSolved = solvedIds.has(q._id);
+                    return (
+                        <div
+                            key={q._id}
+                            onClick={() => onSelectQuestion(q)}
+                            className={`
+                                grid grid-cols-12 gap-4 px-6 py-4 border-b border-divider/50 dark:border-slate-medium/10 cursor-pointer transition-colors
+                                hover:bg-gray-50 dark:hover:bg-slate-800/50
+                                ${i % 2 === 0 ? 'bg-white dark:bg-slate-dark' : 'bg-clinical/20 dark:bg-slate-dark'}
+                            `}
+                        >
+                            <div className="col-span-1 flex justify-center items-center font-mono text-slate-400">
+                                {isSolved ? (
+                                    <span className="text-recovery text-lg animate-in zoom-in duration-300">✓</span>
+                                ) : (
+                                    i + 1
+                                )}
+                            </div>
 
-                        <div className="col-span-8 flex items-center text-sm font-medium text-slate-700 dark:text-slate-300 line-clamp-1">
-                            {q.question}
-                        </div>
+                            <div className="col-span-8 flex items-center text-sm font-medium text-slate-700 dark:text-slate-300">
+                                <span className={`line-clamp-1 ${isSolved ? 'text-slate-400 dark:text-slate-500' : ''}`}>
+                                    {q.question}
+                                </span>
+                            </div>
 
-                        <div className="col-span-3 flex items-center justify-end">
-                            <button className="text-primary hover:text-primary-dark text-xs font-semibold">
-                                Solve →
-                            </button>
+                            <div className="col-span-3 flex items-center justify-end">
+                                <button className={`text-xs font-semibold ${isSolved ? 'text-recovery' : 'text-primary hover:text-primary-dark'}`}>
+                                    {isSolved ? 'Review' : 'Solve →'}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );
