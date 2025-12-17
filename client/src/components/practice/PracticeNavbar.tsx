@@ -2,14 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useState } from 'react';
 
 export default function PracticeNavbar() {
     const { user } = useAuth(); // Assuming user object has streak info or we mock it
     const { theme, setTheme } = useTheme();
     const navigate = useNavigate();
 
-    // Mock streak for now if not in user object
-    const streak = 12;
+    const [streak, setStreak] = useState(0);
 
     return (
         <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-dark/80 backdrop-blur-md border-b border-divider dark:border-slate-medium/20">
@@ -24,8 +24,8 @@ export default function PracticeNavbar() {
                     {/* Center: Tabs */}
                     <div className="hidden md:flex h-full items-center space-x-1">
                         <NavTab label="Practice" active />
-                        <NavTab label="Analytics" />
-                        <NavTab label="Simulator" />
+                        <NavTab label="Contest" />
+                        <NavTab label="Leaderboard" />
                     </div>
 
                     {/* Right: User + Streak */}
