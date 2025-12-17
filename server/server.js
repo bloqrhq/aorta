@@ -4,25 +4,26 @@ import dotenv from "dotenv";
 import connectDB from "./src/config/connectDB.js";
 import questionRoutes from "./src/routes/QuestionRoute.js";
 import authRoutes from "./src/routes/AuthRoute.js";
+import http from "http";
 
 // loading environment variables
 dotenv.config();
 
 // Validate required environment variables
-const validateEnv = () => {
-  const required = ["MONGO_URI", "JWT_SECRET", "FRONTEND_URL"];
-  const missing = required.filter((key) => !process.env[key]);
+// const validateEnv = () => {
+//   const required = ["MONGO_URI", "JWT_SECRET", "FRONTEND_URL"];
+//   const missing = required.filter((key) => !process.env[key]);
 
-  if (missing.length > 0) {
-    console.error("❌ Missing required environment variables:");
-    missing.forEach((key) => console.error(`   - ${key}`));
-    console.error("\nPlease check your .env file.");
-    process.exit(1);
-  }
-  console.log("✅ Environment variables loaded successfully");
-};
+//   if (missing.length > 0) {
+//     console.error("❌ Missing required environment variables:");
+//     missing.forEach((key) => console.error(`   - ${key}`));
+//     console.error("\nPlease check your .env file.");
+//     process.exit(1);
+//   }
+//   console.log("✅ Environment variables loaded successfully");
+// };
 
-validateEnv();
+// validateEnv();
 
 // port from env
 const PORT = process.env.PORT || 5000;
@@ -38,7 +39,6 @@ app.use(
   })
 );
 
-
 app.use(express.json());
 
 // Connect to MongoDB (must complete before server accepts requests)
@@ -52,15 +52,6 @@ app.get("/", (_, res) => {
   res.send("API is running...");
 });
 
-// Only allow in delelopment mode
-if (process.env.NODE_ENV === "development") {
-  app.listen(PORT, () => {
-    console.log(`
-        Server is running... At
-         http://localhost:${PORT}
-        `);
-  });
-}
 
 app.get("/health", (_, res) => {
   res.status(200);
@@ -69,5 +60,13 @@ app.get("/health", (_, res) => {
     message: "Server is running...",
   });
 });
+
+const server = http.createServer(app);
+
+server.listen(PORT, () => {
+   console.log(`Server running on port ${PORT}`);
+  console.log(`open server at http://localhost:${PORT}`);
+})
+
 // Export for vercel deployment
 export default app;
