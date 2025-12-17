@@ -20,12 +20,46 @@ const TOPICS = [
     }
 ];
 
-export default function SidebarFilters() {
-    const [openSubject, setOpenSubject] = useState<string | null>('Human Physiology');
+interface SidebarFiltersProps {
+    subject: string;
+    setSubject: (s: string) => void;
+}
+
+export default function SidebarFilters({ subject, setSubject }: SidebarFiltersProps) {
+    // const [openSubject, setOpenSubject] = useState<string | null>('Human Physiology'); // Removing old mock state
     const [selectedMode, setSelectedMode] = useState('weakness');
+
+    const subjects = [
+        { id: 'phy', name: 'Physics', icon: '⚡' },
+        { id: 'che', name: 'Chemistry', icon: '🧪' },
+        { id: 'bot', name: 'Botany', icon: '🌿' },
+        { id: 'zoo', name: 'Zoology', icon: '🦁' },
+    ];
 
     return (
         <div className="space-y-6">
+            {/* Subject Selector */}
+            <section>
+                <h3 className="text-xs font-bold text-slate-medium dark:text-slate-400 uppercase tracking-wider mb-3">Subject</h3>
+                <div className="grid grid-cols-2 gap-2">
+                    {subjects.map((s) => (
+                        <button
+                            key={s.id}
+                            onClick={() => setSubject(s.id)}
+                            className={`
+                                flex items-center justify-center gap-2 p-3 rounded-xl border transition-all
+                                ${subject === s.id
+                                    ? 'bg-primary/10 border-primary text-primary font-bold shadow-sm'
+                                    : 'bg-white dark:bg-slate-dark border-divider dark:border-slate-medium/10 text-slate-600 dark:text-slate-400 hover:border-neural/50'
+                                }
+                            `}
+                        >
+                            <span className="text-lg">{s.icon}</span>
+                            <span className="text-sm">{s.name}</span>
+                        </button>
+                    ))}
+                </div>
+            </section>
 
             {/* Practice Mode Selector */}
             <section>
@@ -79,58 +113,7 @@ export default function SidebarFilters() {
                 </div>
             </section>
 
-            {/* Topic Filters */}
-            <section>
-                <h3 className="text-xs font-bold text-slate-medium dark:text-slate-400 uppercase tracking-wider mb-3">Topics</h3>
-                <div className="space-y-1">
-                    {TOPICS.map((subject) => (
-                        <div key={subject.subject} className="bg-white dark:bg-slate-dark rounded-xl border border-divider dark:border-slate-medium/10 overflow-hidden">
-                            <button
-                                onClick={() => setOpenSubject(openSubject === subject.subject ? null : subject.subject)}
-                                className="w-full flex items-center justify-between p-3 text-left hover:bg-clinical dark:hover:bg-slate-800 transition-colors"
-                            >
-                                <span className="font-semibold text-sm text-slate-dark dark:text-slate-200">{subject.subject}</span>
-                                <svg
-                                    className={`w-4 h-4 text-slate-400 transform transition-transform ${openSubject === subject.subject ? 'rotate-180' : ''}`}
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
 
-                            <AnimatePresence>
-                                {openSubject === subject.subject && (
-                                    <motion.div
-                                        initial={{ height: 0 }}
-                                        animate={{ height: 'auto' }}
-                                        exit={{ height: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="overflow-hidden"
-                                    >
-                                        <div className="p-3 pt-0 space-y-3">
-                                            {subject.chapters.map(chapter => (
-                                                <div key={chapter.name}>
-                                                    <h4 className="text-xs font-medium text-slate-500 mb-2">{chapter.name}</h4>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {chapter.concepts.map(concept => (
-                                                            <button
-                                                                key={concept}
-                                                                className="px-2.5 py-1 text-xs rounded-full border border-divider dark:border-slate-medium/20 text-slate-600 dark:text-slate-300 hover:border-neural hover:text-neural hover:bg-neural/5 transition-colors"
-                                                            >
-                                                                {concept}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    ))}
-                </div>
-            </section>
         </div>
     );
 }

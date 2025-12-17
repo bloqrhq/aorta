@@ -7,27 +7,34 @@ import QuestionPlayer from "../components/practice/QuestionPlayer";
 
 export default function Practice() {
   const [currentView, setCurrentView] = useState<'list' | 'player'>('list');
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
+  const [selectedQuestion, setSelectedQuestion] = useState<any | null>(null);
+  const [subject, setSubject] = useState('phy');
 
-  const handleSelectQuestion = (id: string) => {
-    setSelectedQuestionId(id);
+  const handleSelectQuestion = (question: any) => {
+    setSelectedQuestion(question);
     setCurrentView('player');
   };
 
   const handleBackToList = () => {
     setCurrentView('list');
-    setSelectedQuestionId(null);
+    setSelectedQuestion(null);
   };
 
   return (
     <PracticeLayout
-      sidebar={<SidebarFilters />}
+      sidebar={<SidebarFilters subject={subject} setSubject={setSubject} />}
       utilityPanel={<UtilityPanel />}
     >
       {currentView === 'list' ? (
-        <QuestionList onSelectQuestion={handleSelectQuestion} />
+        <QuestionList subject={subject} onSelectQuestion={handleSelectQuestion} />
       ) : (
-        <QuestionPlayer onBack={handleBackToList} />
+        selectedQuestion && (
+          <QuestionPlayer
+            question={selectedQuestion}
+            onBack={handleBackToList}
+            subject={subject}
+          />
+        )
       )}
     </PracticeLayout>
   );
