@@ -8,10 +8,10 @@ interface PracticeLayoutProps {
     streak?: number;
 }
 
-export default function PracticeLayout({ children, sidebar, utilityPanel, streak }: PracticeLayoutProps) {
+export default function PracticeLayout({ children, sidebar, utilityPanel }: PracticeLayoutProps) {
     return (
         <div className="min-h-screen bg-clinical dark:bg-slate-900 flex flex-col font-sans">
-            <Navbar streak={streak} />
+            <Navbar />
 
             <main className="flex-1 max-w-[1920px] w-full mx-auto p-4 sm:p-6 lg:p-6 overflow-hidden">
                 <div className="h-full grid grid-cols-1 lg:grid-cols-12 gap-6">
