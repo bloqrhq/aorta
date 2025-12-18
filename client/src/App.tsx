@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Practice from './pages/Practice';
 import Contest from './pages/Contest';
 import Dashboard from './pages/Dashboard';
+import Leaderboard from './pages/Leaderboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="/practice" element={<Practice />} />
             <Route path="/contest" element={<Contest />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
           </Route>
         </Routes>
       </AuthProvider>
