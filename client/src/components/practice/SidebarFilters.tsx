@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // Mock Data Structure
 const TOPICS = [
@@ -20,14 +20,21 @@ const TOPICS = [
     }
 ];
 
+export interface Filters {
+    year: string;
+    status: 'all' | 'solved' | 'unsolved';
+}
+
 interface SidebarFiltersProps {
     subject: string;
     setSubject: (s: string) => void;
+    filters: Filters;
+    setFilters: (f: Filters) => void;
     onModeSelect: (mode: string) => void;
+    selectedMode: string;
 }
 
-export default function SidebarFilters({ subject, setSubject, onModeSelect }: SidebarFiltersProps) {
-    const [selectedMode, setSelectedMode] = useState('weakness');
+export default function SidebarFilters({ subject, setSubject, filters, setFilters, onModeSelect, selectedMode }: SidebarFiltersProps) {
 
     const subjects = [
         { id: 'phy', name: 'Physics' },
@@ -35,6 +42,8 @@ export default function SidebarFilters({ subject, setSubject, onModeSelect }: Si
         { id: 'bot', name: 'Botany' },
         { id: 'zoo', name: 'Zoology' },
     ];
+
+    const years = ['2024', '2023', '2022', '2021', '2020'];
 
     return (
         <div className="space-y-6">
@@ -60,34 +69,68 @@ export default function SidebarFilters({ subject, setSubject, onModeSelect }: Si
                 </div>
             </section>
 
+            {/* Filters */}
+            <section>
+                <h3 className="text-xs font-bold text-slate-medium dark:text-slate-400 uppercase tracking-wider mb-3">Filters</h3>
+                <div className="space-y-3">
+                    {/* Year Filter */}
+                    <div>
+                        <label className="text-xs text-slate-500 mb-1 block">Year</label>
+                        <select
+                            value={filters.year}
+                            onChange={(e) => setFilters({ ...filters, year: e.target.value })}
+                            className="w-full text-sm p-2 rounded-lg border border-divider dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 outline-none"
+                        >
+                            <option value="">All Years</option>
+                            {years.map(y => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                    </div>
+
+                    {/* Status Filter */}
+                    <div>
+                        <label className="text-xs text-slate-500 mb-1 block">Status</label>
+                        <div className="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1 border border-divider dark:border-slate-700">
+                            {/* Helper for tabs */}
+                            {[
+                                { id: 'all', label: 'All' },
+                                { id: 'solved', label: 'Solved' },
+                                { id: 'unsolved', label: 'Unsolved' }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setFilters({ ...filters, status: tab.id as any })}
+                                    className={`
+                                         flex-1 text-xs py-1.5 rounded-md font-medium transition-all
+                                         ${filters.status === tab.id
+                                            ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-800 dark:text-slate-200'
+                                            : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}
+                                     `}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Practice Mode Selector */}
             <section>
                 <h3 className="text-xs font-bold text-slate-medium dark:text-slate-400 uppercase tracking-wider mb-3">Practice Mode</h3>
                 <div className="space-y-2">
                     <ModeCard
-                        id="weakness"
-                        title="Target Weak Areas"
-                        description="AI-curated questions from your lowest accuracy topics."
-                        active={selectedMode === 'weakness'}
-                        onClick={() => setSelectedMode('weakness')}
-
-                    />
-                    <ModeCard
-                        id="neet"
-                        title="NEET Pattern Drill"
-                        description="Mock test simulation with standard weightage."
-                        active={selectedMode === 'neet'}
-                        onClick={() => setSelectedMode('neet')}
+                        id="subject-wise"
+                        title="Subject Wise"
+                        description="Practice questions by selected subject."
+                        active={selectedMode === 'subject-wise'}
+                        onClick={() => onModeSelect('subject-wise')}
                     />
                     <ModeCard
                         id="timed"
                         title="Timed Practice"
                         description="Speed & accuracy focus. 30 questions in 30 mins."
                         active={selectedMode === 'timed'}
-                        onClick={() => {
-                            setSelectedMode('timed');
-                            onModeSelect('timed');
-                        }}
+                        onClick={() => onModeSelect('timed')}
                     />
                 </div>
             </section>
