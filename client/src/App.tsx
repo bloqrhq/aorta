@@ -6,6 +6,7 @@ import Practice from './pages/Practice';
 import Contest from './pages/Contest';
 import Dashboard from './pages/Dashboard';
 import Leaderboard from './pages/Leaderboard';
+import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -26,6 +27,8 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
           </Route>
+          {/* Catch-all Route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
     </ThemeProvider>
