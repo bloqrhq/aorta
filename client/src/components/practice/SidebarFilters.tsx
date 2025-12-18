@@ -23,10 +23,10 @@ const TOPICS = [
 interface SidebarFiltersProps {
     subject: string;
     setSubject: (s: string) => void;
+    onModeSelect: (mode: string) => void;
 }
 
-export default function SidebarFilters({ subject, setSubject }: SidebarFiltersProps) {
-    // const [openSubject, setOpenSubject] = useState<string | null>('Human Physiology'); // Removing old mock state
+export default function SidebarFilters({ subject, setSubject, onModeSelect }: SidebarFiltersProps) {
     const [selectedMode, setSelectedMode] = useState('weakness');
 
     const subjects = [
@@ -84,7 +84,10 @@ export default function SidebarFilters({ subject, setSubject }: SidebarFiltersPr
                         title="Timed Practice"
                         description="Speed & accuracy focus. 30 questions in 30 mins."
                         active={selectedMode === 'timed'}
-                        onClick={() => setSelectedMode('timed')}
+                        onClick={() => {
+                            setSelectedMode('timed');
+                            onModeSelect('timed');
+                        }}
                     />
                 </div>
             </section>
