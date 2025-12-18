@@ -41,11 +41,7 @@ export default function UtilityPanel({ stats }: UtilityPanelProps) {
                         value={solved.toString()}
                         color="text-slate-dark dark:text-slate-200"
                     />
-                    <StatRow
-                        label="Current Streak"
-                        value={`${streak} 🔥`}
-                        color="text-orange-500"
-                    />
+
                 </div>
             </section>
         </div>
