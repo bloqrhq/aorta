@@ -70,7 +70,7 @@ export default function SidebarFilters({ subject, setSubject }: SidebarFiltersPr
                         description="AI-curated questions from your lowest accuracy topics."
                         active={selectedMode === 'weakness'}
                         onClick={() => setSelectedMode('weakness')}
-                        
+
                     />
                     <ModeCard
                         id="neet"
@@ -89,31 +89,39 @@ export default function SidebarFilters({ subject, setSubject }: SidebarFiltersPr
                 </div>
             </section>
 
+
             {/* Weakness Heat Indicator */}
-            <section>
-                <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xs font-bold text-slate-medium dark:text-slate-400 uppercase tracking-wider">Concept Heatmap</h3>
-                    <span className="text-xs text-primary cursor-pointer hover:underline">Auto-filter Weak</span>
-                </div>
-                <div className="bg-white dark:bg-slate-dark rounded-xl p-3 border border-divider dark:border-slate-medium/10 shadow-sm">
-                    <div className="flex justify-between items-end h-12 gap-1">
-                        {[40, 60, 30, 80, 20, 90, 50, 45, 25, 10].map((val, i) => (
-                            <div
-                                key={i}
-                                className={`w-full rounded-sm ${val < 40 ? 'bg-arterial' : val < 70 ? 'bg-gold' : 'bg-recovery'
-                                    }`}
-                                style={{ height: `${val}%`, opacity: 0.8 }}
-                                title={`Module ${i + 1}: ${val}% Accuracy`}
-                            />
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-
+            <div className="hidden lg:block">
+                <SidebarHeatmap />
+            </div>
         </div>
     );
 }
+
+export function SidebarHeatmap() {
+    return (
+        <section>
+            <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xs font-bold text-slate-medium dark:text-slate-400 uppercase tracking-wider">Concept Heatmap</h3>
+                <span className="text-xs text-primary cursor-pointer hover:underline">Auto-filter Weak</span>
+            </div>
+            <div className="bg-white dark:bg-slate-dark rounded-xl p-3 border border-divider dark:border-slate-medium/10 shadow-sm">
+                <div className="flex justify-between items-end h-12 gap-1">
+                    {[40, 60, 30, 80, 20, 90, 50, 45, 25, 10].map((val, i) => (
+                        <div
+                            key={i}
+                            className={`w-full rounded-sm ${val < 40 ? 'bg-arterial' : val < 70 ? 'bg-gold' : 'bg-recovery'
+                                }`}
+                            style={{ height: `${val}%`, opacity: 0.8 }}
+                            title={`Module ${i + 1}: ${val}% Accuracy`}
+                        />
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
 
 function ModeCard({ title, description, active, onClick, icon }: any) {
     return (

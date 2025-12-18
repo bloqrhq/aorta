@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PracticeLayout from "../components/practice/PracticeLayout";
-import SidebarFilters from "../components/practice/SidebarFilters";
+import SidebarFilters, { SidebarHeatmap } from "../components/practice/SidebarFilters";
 import UtilityPanel from "../components/practice/UtilityPanel";
 import QuestionList, { type Question } from "../components/practice/QuestionList";
 import QuestionPlayer from "../components/practice/QuestionPlayer";
@@ -131,6 +131,7 @@ export default function Practice() {
     <PracticeLayout
       sidebar={<SidebarFilters subject={subject} setSubject={setSubject} />}
       utilityPanel={<UtilityPanel stats={userStats} />}
+      mobileBottom={<SidebarHeatmap />}
     >
       {currentView === 'list' ? (
         <QuestionList

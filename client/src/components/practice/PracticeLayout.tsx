@@ -5,10 +5,11 @@ interface PracticeLayoutProps {
     children: React.ReactNode;
     sidebar: React.ReactNode;
     utilityPanel: React.ReactNode;
+    mobileBottom?: React.ReactNode;
     streak?: number;
 }
 
-export default function PracticeLayout({ children, sidebar, utilityPanel }: PracticeLayoutProps) {
+export default function PracticeLayout({ children, sidebar, utilityPanel, mobileBottom }: PracticeLayoutProps) {
     return (
         <div className="min-h-screen bg-clinical dark:bg-slate-900 flex flex-col font-sans">
             <Navbar />
@@ -17,7 +18,7 @@ export default function PracticeLayout({ children, sidebar, utilityPanel }: Prac
                 <div className="h-full grid grid-cols-1 lg:grid-cols-12 gap-6">
 
                     {/* Left Sidebar (Filters) - 3 cols on massive screens, 3 on lg */}
-                    <div className="hidden lg:block lg:col-span-3 xl:col-span-2 overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="lg:col-span-3 xl:col-span-2 overflow-y-auto pr-2 custom-scrollbar">
                         {sidebar}
                     </div>
 
@@ -37,6 +38,11 @@ export default function PracticeLayout({ children, sidebar, utilityPanel }: Prac
                     */}
                     <div className="hidden xl:block xl:col-span-2 overflow-y-auto pl-2 custom-scrollbar">
                         {utilityPanel}
+                    </div>
+
+                    {/* Mobile Bottom Content */}
+                    <div className="col-span-1 lg:hidden mt-4 pb-4">
+                        {mobileBottom}
                     </div>
 
                 </div>
