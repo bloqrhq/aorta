@@ -83,12 +83,28 @@ export default function QuestionList({ subject, questions, loading, error, solve
         );
     }
 
+
+    const subjectName = (subject: string) => {
+        switch (subject) {
+            case 'phy':
+                return 'Physics';
+            case 'che':
+                return 'Chemistry';
+            case 'bot':
+                return 'Botany';
+            case 'zoo':
+                return 'Zoology';
+            default:
+                return 'Unknown';
+        }
+    }
+
     return (
         <div className="flex flex-col h-full bg-white dark:bg-slate-dark rounded-2xl">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-divider dark:border-slate-medium/10">
                 <h2 className="text-lg font-bold text-slate-dark dark:text-slate-200">
-                    {subject.toUpperCase()} Questions
+                    {subjectName(subject)} Questions
                 </h2>
                 <div className="text-xs text-slate-500">
                     {questions.length} Questions

@@ -64,7 +64,7 @@ app.get("/health", (_, res) => {
 const server = http.createServer(app);
 
 server.listen(PORT, () => {
-   console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
   console.log(`open server at http://localhost:${PORT}`);
 })
 
