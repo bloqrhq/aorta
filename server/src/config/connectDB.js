@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 //mongoDB url
-const URL = process.env.MONGO_URI || "mongodb://localhost:27017/aorta";
+const URL = process.env.MONGO_URI;
 
 //Connection function
 const connectDB = async () => {
