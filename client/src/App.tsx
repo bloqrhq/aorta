@@ -10,6 +10,7 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import TestPage from './pages/TestPage';
 
 export default function App() {
   return (
@@ -20,6 +21,9 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
+          if(process.env.VITE_ENVIRONMENT !== "production"){
+            <Route path="/test" element={<TestPage />} />
+          }
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/practice" element={<Practice />} />
