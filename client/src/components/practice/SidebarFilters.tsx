@@ -79,7 +79,7 @@ export default function SidebarFilters({ subject, setSubject, filters, setFilter
                         <select
                             value={filters.year}
                             onChange={(e) => setFilters({ ...filters, year: e.target.value })}
-                            className="w-full text-sm p-2 rounded-lg border border-divider dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 outline-none"
+                            className="w-full text-sm p-2 rounded-lg border border-divider dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none"
                         >
                             <option value="">All Years</option>
                             {years.map(y => <option key={y} value={y}>{y}</option>)}
